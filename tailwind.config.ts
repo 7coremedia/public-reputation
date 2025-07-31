@@ -26,7 +26,8 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					glow: 'hsl(var(--primary-glow))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -50,7 +51,21 @@ export default {
 				},
 				card: {
 					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))'
+					foreground: 'hsl(var(--card-foreground))',
+					border: 'hsl(var(--card-border))'
+				},
+				trust: {
+					excellent: 'hsl(var(--trust-excellent))',
+					good: 'hsl(var(--trust-good))',
+					okay: 'hsl(var(--trust-okay))',
+					poor: 'hsl(var(--trust-poor))',
+					terrible: 'hsl(var(--trust-terrible))'
+				},
+				status: {
+					verified: 'hsl(var(--verified))',
+					pending: 'hsl(var(--pending))',
+					flagged: 'hsl(var(--flagged))',
+					'under-review': 'hsl(var(--under-review))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
