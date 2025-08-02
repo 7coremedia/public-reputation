@@ -186,12 +186,10 @@ export default function Account() {
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
               <TabsTrigger value="history">History</TabsTrigger>
             </TabsList>
-          </Tabs>
-        </div>
 
-        {/* Tab Content */}
-        <div className="px-4 pb-20">
-          <TabsContent value="profile" className="space-y-4">
+            {/* Tab Content */}
+            <div className="px-4 pb-20 mt-4">
+              <TabsContent value="profile" className="space-y-4">
             {/* Profile Information */}
             <Card className="p-4 rounded-2xl">
               <h3 className="font-medium mb-3">Profile Information</h3>
@@ -367,6 +365,8 @@ export default function Account() {
               </div>
             </div>
           </TabsContent>
+            </div>
+          </Tabs>
         </div>
 
         {/* Claim Business Modal */}
