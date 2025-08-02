@@ -26,7 +26,7 @@ const mockBusiness = {
   // Trust system metrics
   totalCases: 156,
   resolvedCases: 139,
-  pendingCases: 12,
+  pendingCasesCount: 12,
   ignoredCases: 5,
   averageResolutionTime: "3.2 days",
   verifiedDetails: {
@@ -367,7 +367,7 @@ export default function BusinessDashboard() {
                   <p className="text-xs text-muted-foreground">Resolved</p>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-status-pending">{mockBusiness.pendingCases}</div>
+                  <div className="text-2xl font-bold text-status-pending">{mockBusiness.pendingCasesCount}</div>
                   <p className="text-xs text-muted-foreground">Pending</p>
                 </div>
               </div>
