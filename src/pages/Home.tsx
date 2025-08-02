@@ -4,6 +4,7 @@ import { SearchBar } from "@/components/search-bar"
 import { BusinessCard } from "@/components/ui/business-card"
 import { Button } from "@/components/ui/button"
 import { Plus, TrendingUp, MapPin } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 // Mock data matching the design
 const mockBusinesses = [
@@ -51,6 +52,7 @@ const mockBusinesses = [
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("")
+  const navigate = useNavigate()
 
   const filteredBusinesses = mockBusinesses.filter(business =>
     business.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -59,12 +61,13 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="mobile-container">
+      <div className="centered-container">
         {/* Header */}
         <MobileHeader 
           title="Verify Business Trust"
           showSearch={true}
           showMenu={true}
+          onMenu={() => navigate("/account")}
         />
 
         {/* Search */}
@@ -79,6 +82,7 @@ export default function Home() {
             <Button 
               variant="outline" 
               className="h-12 rounded-2xl flex items-center gap-2 text-sm"
+              onClick={() => navigate("/discover")}
             >
               <TrendingUp className="w-4 h-4" />
               Trending
@@ -86,12 +90,14 @@ export default function Home() {
             <Button 
               variant="outline" 
               className="h-12 rounded-2xl flex items-center gap-2 text-sm"
+              onClick={() => navigate("/discover")}
             >
               <MapPin className="w-4 h-4" />
               Near Me
             </Button>
             <Button 
               className="h-12 rounded-2xl flex items-center gap-2 text-sm bg-primary hover:bg-primary/90"
+              onClick={() => navigate("/submit-opinion")}
             >
               <Plus className="w-4 h-4" />
               Report
@@ -100,10 +106,15 @@ export default function Home() {
         </div>
 
         {/* Business Grid */}
-        <div className="px-4 space-y-4 pb-20">
+        <div className="flex-1 px-4 space-y-4 pb-20">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Recent Businesses</h2>
-            <Button variant="ghost" size="sm" className="text-primary">
+            <h2 className="expressive-subheading">Recent Businesses</h2>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-primary"
+              onClick={() => navigate("/discover")}
+            >
               View All
             </Button>
           </div>
@@ -119,7 +130,7 @@ export default function Home() {
                 rating={business.rating}
                 reviewCount={business.reviewCount}
                 image={business.image}
-                onClick={() => console.log(`Navigate to ${business.name}`)}
+                onClick={() => navigate(`/business/${business.id}`)}
               />
             ))}
           </div>
@@ -127,7 +138,11 @@ export default function Home() {
           {filteredBusinesses.length === 0 && (
             <div className="text-center py-12">
               <p className="text-muted-foreground">No businesses found</p>
-              <Button className="mt-4" variant="outline">
+              <Button 
+                className="mt-4" 
+                variant="outline"
+                onClick={() => navigate("/submit-opinion")}
+              >
                 Be the first to report this business
               </Button>
             </div>
