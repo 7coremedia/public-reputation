@@ -119,13 +119,13 @@ export default function Account() {
     <div className="min-h-screen bg-slate-50">
       <div className="mobile-container">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 sticky top-0 bg-white z-50">
+        <div className="flex items-center justify-between p-4 sticky top-0 bg-background border-b border-border z-50">
           <Button variant="ghost" size="icon" className="rounded-full" onClick={() => navigate(-1)}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <h1 className="text-lg font-semibold">Account</h1>
           <Button variant="ghost" size="icon" className="rounded-full">
-            <Settings className="w-5 h-5" />
+            <Building2 className="w-5 h-5" />
           </Button>
         </div>
 
