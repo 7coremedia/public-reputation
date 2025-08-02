@@ -115,8 +115,6 @@ export default function BusinessDiscovery() {
         <MobileHeader 
           title="Discover Businesses"
           showBack={true}
-          showSearch={false}
-          showMenu={true}
           onBack={() => window.history.back()}
         />
 

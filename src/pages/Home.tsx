@@ -65,9 +65,6 @@ export default function Home() {
         {/* Header */}
         <MobileHeader 
           title="Verify Business Trust"
-          showSearch={true}
-          showMenu={true}
-          onMenu={() => navigate("/account")}
         />
 
         {/* Search */}

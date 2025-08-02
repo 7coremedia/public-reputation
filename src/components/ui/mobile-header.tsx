@@ -1,25 +1,18 @@
 import { cn } from "@/lib/utils"
-import { ArrowLeft, Search, MoreVertical } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
+import { Avatar3D } from "./avatar-3d"
 
 interface MobileHeaderProps {
   title: string
   showBack?: boolean
-  showSearch?: boolean
-  showMenu?: boolean
   onBack?: () => void
-  onSearch?: () => void
-  onMenu?: () => void
   className?: string
 }
 
 export function MobileHeader({
   title,
   showBack = false,
-  showSearch = false,
-  showMenu = false,
   onBack,
-  onSearch,
-  onMenu,
   className
 }: MobileHeaderProps) {
   return (
@@ -39,24 +32,7 @@ export function MobileHeader({
         <h1 className="text-lg font-semibold text-foreground">{title}</h1>
       </div>
       
-      <div className="flex items-center gap-2">
-        {showSearch && (
-          <button 
-            onClick={onSearch}
-            className="p-2 rounded-xl hover:bg-muted transition-colors"
-          >
-            <Search className="w-5 h-5" />
-          </button>
-        )}
-        {showMenu && (
-          <button 
-            onClick={onMenu}
-            className="p-2 rounded-xl hover:bg-muted transition-colors"
-          >
-            <MoreVertical className="w-5 h-5" />
-          </button>
-        )}
-      </div>
+      <Avatar3D size={36} />
     </div>
   )
 }

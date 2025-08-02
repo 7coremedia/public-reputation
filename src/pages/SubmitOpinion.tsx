@@ -420,8 +420,6 @@ export default function SubmitOpinion() {
         <MobileHeader 
           title="Submit Opinion"
           showBack={true}
-          showSearch={false}
-          showMenu={false}
           onBack={() => {
             const steps = ["business", "type", "details", "proof", "rating", "final"]
             const currentIndex = steps.indexOf(step)
