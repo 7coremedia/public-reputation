@@ -1,19 +1,22 @@
 import { cn } from "@/lib/utils"
 import { ArrowLeft } from "lucide-react"
 import { Avatar3D } from "./avatar-3d"
+import { TypingAnimation } from "./typing-animation"
 
 interface MobileHeaderProps {
-  title: string
+  title?: string
   showBack?: boolean
   onBack?: () => void
   className?: string
+  useTypingAnimation?: boolean
 }
 
 export function MobileHeader({
   title,
   showBack = false,
   onBack,
-  className
+  className,
+  useTypingAnimation = false
 }: MobileHeaderProps) {
   return (
     <div className={cn(
@@ -29,7 +32,11 @@ export function MobileHeader({
             <ArrowLeft className="w-5 h-5" />
           </button>
         )}
-        <h1 className="text-lg font-semibold text-foreground">{title}</h1>
+        {useTypingAnimation ? (
+          <TypingAnimation />
+        ) : (
+          <h1 className="text-lg font-semibold text-foreground">{title}</h1>
+        )}
       </div>
       
       <Avatar3D size={36} />

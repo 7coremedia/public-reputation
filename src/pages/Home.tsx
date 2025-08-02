@@ -64,7 +64,7 @@ export default function Home() {
       <div className="centered-container">
         {/* Header */}
         <MobileHeader 
-          title="Verify Business Trust"
+          useTypingAnimation={true}
         />
 
         {/* Search */}
