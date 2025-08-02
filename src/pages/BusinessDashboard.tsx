@@ -168,20 +168,18 @@ export default function BusinessDashboard() {
         </div>
 
         {/* Tabs */}
-        <div className="px-4 mb-4">
+        <div className="px-4">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-4 mb-4">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="opinions">Opinions</TabsTrigger>
               <TabsTrigger value="cases">Cases</TabsTrigger>
               <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
-          </Tabs>
-        </div>
 
-        {/* Tab Content */}
-        <div className="px-4 pb-20">
-          <TabsContent value="overview" className="space-y-4">
+            {/* Tab Content */}
+            <div className="pb-20">
+              <TabsContent value="overview" className="space-y-4">
             {/* Trust Score Card */}
             <Card className="p-4 rounded-2xl">
               <div className="flex items-center justify-between mb-3">
@@ -483,6 +481,8 @@ export default function BusinessDashboard() {
               </div>
             </Card>
           </TabsContent>
+            </div>
+          </Tabs>
         </div>
 
         {/* Opinion Response Modal */}
