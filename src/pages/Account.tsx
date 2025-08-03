@@ -119,7 +119,7 @@ export default function Account() {
           </Button>
           <h1 className="text-lg font-semibold">Account</h1>
           <Button variant="ghost" size="icon" className="rounded-full">
-            <Settings className="w-5 h-5" />
+            <Building2 className="w-5 h-5" />
           </Button>
         </div>
 
@@ -234,13 +234,13 @@ export default function Account() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-medium">My Businesses</h3>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={() => setShowClaimForm(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Claim Business
+                <Button variant="outline" size="sm" className="px-3" onClick={() => setShowClaimForm(true)}>
+                  <Shield className="w-4 h-4 mr-2" />
+                  Claim
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => setShowCreateBusiness(true)}>
-                  <Building2 className="w-4 h-4 mr-2" />
-                  Create Business
+                <Button variant="outline" size="sm" className="px-3" onClick={() => setShowCreateBusiness(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create
                 </Button>
               </div>
             </div>
