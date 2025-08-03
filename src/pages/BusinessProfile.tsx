@@ -112,8 +112,8 @@ export default function BusinessProfile() {
         isModerator: false
       },
       content: "I had a similar experience with this clinic. The staff was very professional and resolved my issue quickly.",
-      timestamp: "2 hours ago",
-      reactions: { agree: 12, disagree: 1, suspicious: 0, true: 8, cap: 0 },
+      timestamp: "2hr ago",
+      reactions: { agree: 12, disagree: 1, hmm: 0, suspicious: 0, true: 8, cap: 0 },
       replies: [],
       isEdited: false,
       isFlagged: false
@@ -129,8 +129,8 @@ export default function BusinessProfile() {
         isModerator: false
       },
       content: "I'm skeptical about this review. The business has a good track record. Can you provide more details?",
-      timestamp: "1 hour ago",
-      reactions: { agree: 3, disagree: 8, suspicious: 5, true: 2, cap: 1 },
+      timestamp: "1hr ago",
+      reactions: { agree: 3, disagree: 0, hmm: 0, suspicious: 8, true: 2, cap: 1 },
       replies: [
         {
           id: "2.1",
@@ -143,8 +143,8 @@ export default function BusinessProfile() {
             isModerator: false
           },
           content: "I can vouch for the business. They've been consistent with their service quality.",
-          timestamp: "30 minutes ago",
-          reactions: { agree: 5, disagree: 0, suspicious: 0, true: 3, cap: 0 },
+          timestamp: "30m ago",
+          reactions: { agree: 5, disagree: 0, hmm: 0, suspicious: 0, true: 3, cap: 0 },
           replies: [],
           isEdited: false,
           isFlagged: false
@@ -167,8 +167,8 @@ export default function BusinessProfile() {
     console.log("Replying to comment:", commentId, content)
   }
 
-  const handleFlag = (commentId: string) => {
-    console.log("Flagging comment:", commentId)
+  const handleFlag = (commentId: string, reason?: string) => {
+    console.log("Flagging comment:", commentId, "Reason:", reason)
   }
 
   return (
@@ -192,11 +192,19 @@ export default function BusinessProfile() {
         {/* Business Header */}
         <div className="px-4 pb-6">
           <div className="flex items-start gap-4 mb-4">
-            <img 
-              src={mockBusiness.images[0]} 
-              alt={mockBusiness.name}
-              className="w-16 h-16 rounded-2xl object-cover"
-            />
+            <div className="flex flex-col items-center">
+              <img 
+                src={mockBusiness.images[0]} 
+                alt={mockBusiness.name}
+                className="w-16 h-16 rounded-2xl object-cover"
+              />
+              {/* Trust Badges aligned with image */}
+              <div className="flex flex-wrap gap-1 mt-2 w-16 justify-center">
+                <div className="w-2 h-2 rounded-full bg-status-verified" title="Verified CAC" />
+                <div className="w-2 h-2 rounded-full bg-orange-500" title="Fast Resolver" />
+                <div className="w-2 h-2 rounded-full bg-yellow-500" title="Community Favorite" />
+              </div>
+            </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h1 className="text-xl font-bold">{mockBusiness.name}</h1>
@@ -209,14 +217,6 @@ export default function BusinessProfile() {
                   <MapPin className="w-3 h-3 mr-1" />
                   {mockBusiness.location}
                 </Badge>
-              </div>
-              {/* Trust Badges */}
-              <div className="flex flex-wrap gap-1">
-                {mockBusiness.trustBadges.map((badge, index) => (
-                  <Badge key={index} className={`text-xs ${badge.color}`}>
-                    {badge.label}
-                  </Badge>
-                ))}
               </div>
             </div>
             <TrustScore score={mockBusiness.trustScore} size="lg" />
