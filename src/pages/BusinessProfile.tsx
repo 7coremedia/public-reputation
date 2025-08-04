@@ -238,28 +238,32 @@ export default function BusinessProfile() {
               </div>
               <p className="text-sm text-muted-foreground mb-2">{mockBusiness.category}</p>
               
-              {/* Trust Badges - ordered by verification status (red, yellow, green) */}
-              <div className="flex items-center gap-2 mb-2">
-                <div className="flex gap-1">
-                  <div className="px-2 py-1 rounded-full bg-red-500 text-white text-xs font-medium" title="Location Not Verified">
-                    📍
-                  </div>
-                  <div className="px-2 py-1 rounded-full bg-yellow-500 text-white text-xs font-medium" title="Phone Verification Pending">
-                    📞
-                  </div>
-                  <div className="px-2 py-1 rounded-full bg-green-500 text-white text-xs font-medium" title="CAC Verified">
-                    🛡️
-                  </div>
+            </div>
+          </div>
+
+          {/* Trust Badges and Location - aligned with profile image */}
+          <div className="flex flex-col gap-2 mb-4">
+            {/* Trust Badges - ordered by verification status (red, yellow, green) */}
+            <div className="flex items-center gap-2">
+              <div className="flex gap-2">
+                <div className="px-2 py-1 rounded-full bg-red-500 text-white text-xs font-medium flex items-center gap-1" title="Location Not Verified">
+                  📍 <span className="text-white">Location</span>
+                </div>
+                <div className="px-2 py-1 rounded-full bg-yellow-500 text-white text-xs font-medium flex items-center gap-1" title="Phone Verification Pending">
+                  📞 <span className="text-white">Phone</span>
+                </div>
+                <div className="px-2 py-1 rounded-full bg-green-500 text-white text-xs font-medium flex items-center gap-1" title="CAC Verified">
+                  🛡️ <span className="text-white">CAC</span>
                 </div>
               </div>
-              
-              {/* Location Badge - wider and responsive */}
-              <div className="flex items-center gap-2">
-                <Badge variant="outline" className="text-xs max-w-full truncate">
-                  <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
-                  <span className="truncate">{mockBusiness.location}</span>
-                </Badge>
-              </div>
+            </div>
+            
+            {/* Location Badge - wider and responsive */}
+            <div className="flex items-center">
+              <Badge variant="outline" className="text-xs max-w-full truncate">
+                <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
+                <span className="truncate">{mockBusiness.location}</span>
+              </Badge>
             </div>
           </div>
 
