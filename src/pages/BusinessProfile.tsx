@@ -233,7 +233,7 @@ export default function BusinessProfile() {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h1 className="text-xl font-bold">{mockBusiness.name}</h1>
-                {mockBusiness.verified && <CheckCircle className="w-5 h-5 text-status-verified" />}
+                {mockBusiness.verified && <CheckCircle className="w-6 h-6 text-status-verified" />}
                 <TrustScore score={mockBusiness.trustScore} size="sm" />
               </div>
               <p className="text-sm text-muted-foreground mb-2">{mockBusiness.category}</p>
