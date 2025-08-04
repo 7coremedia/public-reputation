@@ -5,6 +5,7 @@ import { TrustBadge } from "@/components/ui/trust-badge";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { CircularProgress } from "@/components/ui/circular-progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CommentSection } from "@/components/ui/comment-section";
 import { useNavigate } from "react-router-dom";
@@ -233,8 +234,7 @@ export default function BusinessProfile() {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h1 className="text-xl font-bold">{mockBusiness.name}</h1>
-                {mockBusiness.verified && <CheckCircle className="w-6 h-6 text-status-verified" />}
-                <TrustScore score={mockBusiness.trustScore} size="sm" />
+                {mockBusiness.verified && <CheckCircle className="w-9 h-9 text-status-verified" />}
               </div>
               <p className="text-sm text-muted-foreground mb-2">{mockBusiness.category}</p>
               
@@ -244,7 +244,7 @@ export default function BusinessProfile() {
           {/* Trust Badges and Location - aligned with profile image */}
           <div className="flex flex-col gap-2 mb-4">
             {/* Trust Badges - ordered by verification status (red, yellow, green) */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 justify-between">
               <div className="flex gap-2">
                 <div className="px-2 py-1 rounded-full bg-red-500 text-white text-xs font-medium flex items-center gap-1" title="Location Not Verified">
                   📍 <span className="text-white">Location</span>
@@ -255,6 +255,12 @@ export default function BusinessProfile() {
                 <div className="px-2 py-1 rounded-full bg-green-500 text-white text-xs font-medium flex items-center gap-1" title="CAC Verified">
                   🛡️ <span className="text-white">CAC</span>
                 </div>
+              </div>
+              
+              {/* Circular Trust Score beside last badge with spacing */}
+              <div className="flex items-center gap-3 ml-4">
+                <CircularProgress value={mockBusiness.trustScore} size={36} strokeWidth={3} />
+                <span className="text-xs font-medium">/100</span>
               </div>
             </div>
             
