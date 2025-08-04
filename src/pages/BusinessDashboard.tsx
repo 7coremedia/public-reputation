@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
+import { OpinionItem, type Opinion } from "@/components/ui/opinion-item"
 
 // Enhanced mock business dashboard data with trust system features
 const mockBusiness = {
@@ -156,7 +157,7 @@ export default function BusinessDashboard() {
                 {mockBusiness.verified && <CheckCircle className="w-5 h-5 text-status-verified" />}
               </div>
               <p className="text-sm text-muted-foreground mb-2">{mockBusiness.category}</p>
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap gap-1 pl-0">
                 {mockBusiness.trustBadges.map((badge, index) => (
                   <Badge key={index} className={`text-xs ${badge.color}`}>
                     {badge.label}
@@ -289,59 +290,19 @@ export default function BusinessDashboard() {
             {/* Opinions List */}
             <div className="space-y-4">
               {mockBusiness.recentOpinions.map((opinion) => (
-                <Card 
-                  key={opinion.id} 
-                  className="p-4 rounded-2xl cursor-pointer transition-all"
-                  onClick={() => setSelectedOpinion(opinion)}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="text-2xl">{opinion.emoji}</div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium text-sm">{opinion.author}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {opinion.daysAgo} days ago
-                        </span>
-                        <Badge className={`text-xs ${getStatusColor(opinion.status)}`}>
-                          {opinion.status}
-                        </Badge>
-                        {opinion.priority && (
-                          <Badge className={`text-xs ${getPriorityColor(opinion.priority)}`}>
-                            {opinion.priority}
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-3">{opinion.content}</p>
-                      
-                      {opinion.resolution && (
-                        <div className="bg-muted/50 rounded-lg p-3 mb-3">
-                          <div className="flex items-center gap-2 mb-1">
-                            <CheckCircle className="w-4 h-4 text-status-verified" />
-                            <span className="text-xs font-medium">Resolution</span>
-                          </div>
-                          <p className="text-xs text-muted-foreground">{opinion.resolution}</p>
-                        </div>
-                      )}
-
-                      <div className="flex items-center gap-3">
-                        {opinion.allowContact && (
-                          <Button variant="outline" size="sm">
-                            <MessageCircle className="w-3 h-3 mr-1" />
-                            Respond
-                          </Button>
-                        )}
-                        <Button variant="outline" size="sm">
-                          <Upload className="w-3 h-3 mr-1" />
-                          Upload Proof
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Flag className="w-3 h-3 mr-1" />
-                          Flag
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
+                <OpinionItem
+                  key={opinion.id}
+                  opinion={opinion as Opinion}
+                  onViewCase={(op) => setSelectedOpinion(op)}
+                  onRespond={(op) => {
+                    setSelectedOpinion(op)
+                    setShowResponseForm(true)
+                  }}
+                  onFlag={(op) => {
+                    // Handle flag action
+                    console.log('Flagging opinion:', op.id)
+                  }}
+                />
               ))}
             </div>
           </TabsContent>
