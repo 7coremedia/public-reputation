@@ -125,6 +125,15 @@ export default function BusinessProfile() {
   const [activeTab, setActiveTab] = useState("overview");
   const resolutionPercentage = mockBusiness.resolvedCases / mockBusiness.totalCases * 100;
 
+  // Function to get trust level text
+  const getTrustLevelText = (score: number) => {
+    if (score >= 80) return "Great";
+    if (score >= 60) return "Good"; 
+    if (score >= 40) return "Okay";
+    if (score >= 20) return "Poor";
+    return "Bad";
+  };
+
   // Mock comments data
   const mockComments = [{
     id: "1",
@@ -258,9 +267,9 @@ export default function BusinessProfile() {
               </div>
               
               {/* Circular Trust Score beside last badge with spacing */}
-              <div className="flex items-center gap-3 ml-4">
-                <CircularProgress value={mockBusiness.trustScore} size={36} strokeWidth={3} />
-                <span className="text-xs font-medium">/100</span>
+              <div className="flex items-center gap-1">
+                <CircularProgress value={mockBusiness.trustScore} size={28} strokeWidth={2} />
+                <span className="text-xs font-medium">{getTrustLevelText(mockBusiness.trustScore)}</span>
               </div>
             </div>
             
