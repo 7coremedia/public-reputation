@@ -1,43 +1,35 @@
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Search, MessageSquare, Building2, Shield, Users, TrendingUp } from "lucide-react"
-import { useNavigate } from "react-router-dom"
-import { TermsModal } from "@/components/ui/terms-modal"
-
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Search, MessageSquare, Building2, Shield, Users, TrendingUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { TermsModal } from "@/components/ui/terms-modal";
 const Onboarding = () => {
-  const [step, setStep] = useState<"welcome" | "path-selection" | "auth" | "terms">("welcome")
-  const [showTermsModal, setShowTermsModal] = useState(false)
-  const [selectedPath, setSelectedPath] = useState<string>("")
-  const navigate = useNavigate()
-
+  const [step, setStep] = useState<"welcome" | "path-selection" | "auth" | "terms">("welcome");
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [selectedPath, setSelectedPath] = useState<string>("");
+  const navigate = useNavigate();
   const handlePathSelection = (path: string) => {
     // Store the user's path choice
-    setSelectedPath(path)
-    localStorage.setItem("userPath", path)
-    setShowTermsModal(true)
-  }
-
+    setSelectedPath(path);
+    localStorage.setItem("userPath", path);
+    setShowTermsModal(true);
+  };
   const handleTermsAccepted = () => {
-    setShowTermsModal(false)
-    setStep("auth")
-  }
-
+    setShowTermsModal(false);
+    setStep("auth");
+  };
   const handleTermsDeclined = () => {
-    setShowTermsModal(false)
-    setStep("path-selection")
-  }
-
+    setShowTermsModal(false);
+    setStep("path-selection");
+  };
   const handleAuthComplete = () => {
-    navigate("/")
-  }
-
+    navigate("/");
+  };
   const getUserType = (): "user" | "business" => {
-    return selectedPath === "business" ? "business" : "user"
-  }
-
-  const renderWelcome = () => (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-white flex items-center justify-center p-4">
+    return selectedPath === "business" ? "business" : "user";
+  };
+  const renderWelcome = () => <div className="min-h-screen bg-gradient-to-br from-green-50 to-white flex items-center justify-center p-4">
       <div className="max-w-md w-full text-center space-y-8">
         <div className="space-y-4">
           <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto">
@@ -51,7 +43,7 @@ const Onboarding = () => {
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 mx-[35px]">
           <div className="flex items-center gap-3 text-sm text-gray-600">
             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
             <span>Expose bad behavior</span>
@@ -66,18 +58,12 @@ const Onboarding = () => {
           </div>
         </div>
 
-        <Button 
-          onClick={() => setStep("path-selection")}
-          className="w-full h-12 text-lg font-semibold"
-        >
+        <Button onClick={() => setStep("path-selection")} className="w-full h-12 text-lg font-semibold">
           Get Started
         </Button>
       </div>
-    </div>
-  )
-
-  const renderPathSelection = () => (
-    <div className="min-h-screen bg-background p-4">
+    </div>;
+  const renderPathSelection = () => <div className="min-h-screen bg-background p-4">
       <div className="max-w-md mx-auto pt-12 space-y-6">
         <div className="text-center space-y-2">
           <h1 className="expressive-heading">What do you want to do?</h1>
@@ -85,10 +71,7 @@ const Onboarding = () => {
         </div>
 
         <div className="space-y-4">
-          <Card 
-            className="cursor-pointer hover:shadow-md transition-shadow"
-            onClick={() => handlePathSelection("lookup")}
-          >
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handlePathSelection("lookup")}>
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -102,10 +85,7 @@ const Onboarding = () => {
             </CardHeader>
           </Card>
 
-          <Card 
-            className="cursor-pointer hover:shadow-md transition-shadow"
-            onClick={() => handlePathSelection("report")}
-          >
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handlePathSelection("report")}>
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
@@ -119,10 +99,7 @@ const Onboarding = () => {
             </CardHeader>
           </Card>
 
-          <Card 
-            className="cursor-pointer hover:shadow-md transition-shadow"
-            onClick={() => handlePathSelection("business")}
-          >
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handlePathSelection("business")}>
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
@@ -137,11 +114,8 @@ const Onboarding = () => {
           </Card>
         </div>
       </div>
-    </div>
-  )
-
-  const renderAuth = () => (
-    <div className="min-h-screen bg-background p-4">
+    </div>;
+  const renderAuth = () => <div className="min-h-screen bg-background p-4">
       <div className="max-w-md mx-auto pt-12 space-y-6">
         <div className="text-center space-y-2">
           <h1 className="expressive-heading">Verify your phone</h1>
@@ -155,11 +129,7 @@ const Onboarding = () => {
               <div className="w-20 h-12 border rounded-lg flex items-center justify-center text-sm font-medium">
                 +234
               </div>
-              <input 
-                type="tel" 
-                placeholder="Enter your phone number"
-                className="flex-1 h-12 px-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
+              <input type="tel" placeholder="Enter your phone number" className="flex-1 h-12 px-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
             </div>
           </div>
 
@@ -170,41 +140,27 @@ const Onboarding = () => {
             </label>
           </div>
 
-          <Button 
-            onClick={handleAuthComplete}
-            className="w-full h-12 text-lg font-semibold"
-          >
+          <Button onClick={handleAuthComplete} className="w-full h-12 text-lg font-semibold">
             Send Verification Code
           </Button>
         </div>
       </div>
-    </div>
-  )
-
+    </div>;
   const renderCurrentStep = () => {
     switch (step) {
       case "welcome":
-        return renderWelcome()
+        return renderWelcome();
       case "path-selection":
-        return renderPathSelection()
+        return renderPathSelection();
       case "auth":
-        return renderAuth()
+        return renderAuth();
       default:
-        return renderWelcome()
+        return renderWelcome();
     }
-  }
-
-  return (
-    <>
+  };
+  return <>
       {renderCurrentStep()}
-      <TermsModal
-        isOpen={showTermsModal}
-        onClose={handleTermsDeclined}
-        onAgree={handleTermsAccepted}
-        userType={getUserType()}
-      />
-    </>
-  )
-}
-
-export default Onboarding
+      <TermsModal isOpen={showTermsModal} onClose={handleTermsDeclined} onAgree={handleTermsAccepted} userType={getUserType()} />
+    </>;
+};
+export default Onboarding;
