@@ -174,7 +174,7 @@ export default function Account() {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-4 mx-0 my-0 px-0 py-0">
               <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="businesses">Businesses</TabsTrigger>
+              <TabsTrigger value="businesses">Company</TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
               <TabsTrigger value="history">History</TabsTrigger>
             </TabsList>
