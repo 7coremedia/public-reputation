@@ -170,77 +170,84 @@ export const TermsModal = ({ isOpen, onClose, onAgree, userType }: TermsModalPro
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col">
-        <DialogHeader>
+      <DialogContent className="max-w-2xl w-full h-[80vh] flex flex-col p-0">
+        <DialogHeader className="px-6 pt-6 pb-4 border-b shrink-0">
           <DialogTitle className="text-xl font-semibold">{title}</DialogTitle>
         </DialogHeader>
         
-        <ScrollArea 
-          className="flex-1 pr-4" 
-          onScrollCapture={handleScroll}
-        >
-          <div className="prose prose-sm max-w-none">
-            {termsContent.split('\n').map((line, index) => {
-              if (line.startsWith('# ')) {
-                return <h1 key={index} className="text-xl font-bold mb-4">{line.slice(2)}</h1>
-              }
-              if (line.startsWith('## ')) {
-                return <h2 key={index} className="text-lg font-semibold mt-6 mb-3">{line.slice(3)}</h2>
-              }
-              if (line.startsWith('_') && line.endsWith('_')) {
-                return <p key={index} className="text-sm text-muted-foreground italic mb-4">{line.slice(1, -1)}</p>
-              }
-              if (line.startsWith('- ')) {
-                return <li key={index} className="ml-4 mb-1">{line.slice(2)}</li>
-              }
-              if (line === '---') {
-                return <hr key={index} className="my-6 border-border" />
-              }
-              if (line.trim() === '') {
-                return <br key={index} />
-              }
-              return <p key={index} className="mb-3">{line}</p>
-            })}
-          </div>
-          
+        <div className="flex-1 flex flex-col min-h-0">
+          <ScrollArea 
+            className="flex-1 px-6" 
+            onScrollCapture={handleScroll}
+          >
+            <div className="py-4 space-y-4">
+              {termsContent.split('\n').map((line, index) => {
+                if (line.startsWith('# ')) {
+                  return <h1 key={index} className="text-xl font-bold mb-4">{line.slice(2)}</h1>
+                }
+                if (line.startsWith('## ')) {
+                  return <h2 key={index} className="text-lg font-semibold mt-6 mb-3">{line.slice(3)}</h2>
+                }
+                if (line.startsWith('_') && line.endsWith('_')) {
+                  return <p key={index} className="text-sm text-muted-foreground italic mb-4">{line.slice(1, -1)}</p>
+                }
+                if (line.startsWith('- ')) {
+                  return <li key={index} className="ml-4 mb-1 list-disc">{line.slice(2)}</li>
+                }
+                if (line === '---') {
+                  return <hr key={index} className="my-6 border-border" />
+                }
+                if (line.trim() === '') {
+                  return <div key={index} className="h-3" />
+                }
+                return <p key={index} className="mb-3 leading-relaxed">{line}</p>
+              })}
+              
+              {/* Extra padding at bottom to ensure scroll detection */}
+              <div className="h-8" />
+            </div>
+          </ScrollArea>
+
           {!hasScrolledToBottom && (
-            <div className="text-center py-4 text-sm text-muted-foreground">
+            <div className="text-center py-2 text-sm text-muted-foreground bg-background/80 backdrop-blur-sm border-t">
               ⬇ Scroll to read all terms ⬇
             </div>
           )}
-        </ScrollArea>
+        </div>
 
-        <DialogFooter className="flex-col space-y-4">
-          <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="agree-terms" 
-              checked={hasAgreed}
-              onCheckedChange={(checked) => setHasAgreed(checked === true)}
-              disabled={!hasScrolledToBottom}
-            />
-            <label 
-              htmlFor="agree-terms" 
-              className={`text-sm ${!hasScrolledToBottom ? 'text-muted-foreground' : 'text-foreground'}`}
-            >
-              I have read and agree to the Terms & Conditions
-            </label>
-          </div>
-          
-          <div className="flex gap-3 w-full">
-            <Button 
-              variant="outline" 
-              onClick={onClose}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleAgree}
-              disabled={!canProceed}
-              className="flex-1"
-            >
-              Agree and Continue
-            </Button>
+        <DialogFooter className="px-6 py-4 border-t bg-background shrink-0">
+          <div className="flex flex-col space-y-4 w-full">
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="agree-terms" 
+                checked={hasAgreed}
+                onCheckedChange={(checked) => setHasAgreed(checked === true)}
+                disabled={!hasScrolledToBottom}
+              />
+              <label 
+                htmlFor="agree-terms" 
+                className={`text-sm ${!hasScrolledToBottom ? 'text-muted-foreground' : 'text-foreground'}`}
+              >
+                I have read and agree to the Terms & Conditions
+              </label>
+            </div>
+            
+            <div className="flex gap-3 w-full">
+              <Button 
+                variant="outline" 
+                onClick={onClose}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleAgree}
+                disabled={!canProceed}
+                className="flex-1"
+              >
+                Agree and Continue
+              </Button>
+            </div>
           </div>
         </DialogFooter>
       </DialogContent>
