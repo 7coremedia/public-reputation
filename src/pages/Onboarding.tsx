@@ -38,7 +38,7 @@ const Onboarding = () => {
           <h1 className="expressive-heading text-gray-900">
             Welcome to Public Opinions
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-lg mx-0 my-[15px] px-0 py-[15px]">
             The civic accountability platform for African businesses
           </p>
         </div>
