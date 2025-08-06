@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { MobileHeader } from "@/components/ui/mobile-header"
+import { useAuth } from "@/hooks/useAuth"
 import { SearchBar } from "@/components/search-bar"
 import { BusinessCard } from "@/components/ui/business-card"
 import { Button } from "@/components/ui/button"
@@ -53,6 +54,7 @@ const mockBusinesses = [
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("")
   const navigate = useNavigate()
+  const { user } = useAuth()
 
   const filteredBusinesses = mockBusinesses.filter(business =>
     business.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

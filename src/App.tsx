@@ -12,6 +12,7 @@ import ResolutionTracker from "./pages/ResolutionTracker";
 import RefundAppeal from "./pages/RefundAppeal";
 import BusinessDashboard from "./pages/BusinessDashboard";
 import Account from "./pages/Account";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/appeals" element={<RefundAppeal />} />
           <Route path="/dashboard" element={<BusinessDashboard />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/business/:id" element={<BusinessProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

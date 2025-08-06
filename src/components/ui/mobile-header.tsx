@@ -1,7 +1,10 @@
 import { cn } from "@/lib/utils"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, LogIn, LogOut } from "lucide-react"
 import { Avatar3D } from "./avatar-3d"
 import { TypingAnimation } from "./typing-animation"
+import { useAuth } from "@/hooks/useAuth"
+import { Button } from "./button"
+import { useNavigate } from "react-router-dom"
 
 interface MobileHeaderProps {
   title?: string
@@ -18,6 +21,8 @@ export function MobileHeader({
   className,
   useTypingAnimation = false
 }: MobileHeaderProps) {
+  const { user, signOut } = useAuth()
+  const navigate = useNavigate()
   return (
     <div className={cn(
       "flex items-center justify-between p-4 bg-background border-b border-border sticky top-0 z-50",
@@ -39,7 +44,31 @@ export function MobileHeader({
         )}
       </div>
       
-      <Avatar3D size={36} />
+      <div className="flex items-center gap-2">
+        {user ? (
+          <>
+            <Avatar3D size={36} />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={signOut}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <LogOut className="w-4 h-4" />
+            </Button>
+          </>
+        ) : (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/auth")}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <LogIn className="w-4 h-4" />
+            Sign In
+          </Button>
+        )}
+      </div>
     </div>
   )
 }
