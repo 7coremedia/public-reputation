@@ -11,6 +11,7 @@ import SubmitOpinion from "./pages/SubmitOpinion";
 import ResolutionTracker from "./pages/ResolutionTracker";
 import RefundAppeal from "./pages/RefundAppeal";
 import BusinessDashboard from "./pages/BusinessDashboard";
+import BusinessPortal from "./pages/BusinessPortal";
 import Account from "./pages/Account";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/tracker" element={<ResolutionTracker />} />
           <Route path="/appeals" element={<RefundAppeal />} />
           <Route path="/dashboard" element={<BusinessDashboard />} />
+          <Route path="/business-portal" element={<BusinessPortal />} />
           <Route path="/account" element={<Account />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/business/:id" element={<BusinessProfile />} />

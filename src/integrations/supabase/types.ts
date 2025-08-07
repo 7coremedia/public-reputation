@@ -14,6 +14,144 @@ export type Database = {
   }
   public: {
     Tables: {
+      business_responses: {
+        Row: {
+          business_id: string
+          created_at: string
+          created_by: string
+          id: string
+          opinion_id: string
+          response_text: string
+          updated_at: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          created_by: string
+          id?: string
+          opinion_id: string
+          response_text: string
+          updated_at?: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          opinion_id?: string
+          response_text?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_responses_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "business_responses_opinion_id_fkey"
+            columns: ["opinion_id"]
+            isOneToOne: false
+            referencedRelation: "opinions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      businesses: {
+        Row: {
+          address: string | null
+          category: string
+          city: string | null
+          claimed_by: string | null
+          created_at: string
+          description: string | null
+          email: string | null
+          id: string
+          image_url: string | null
+          is_claimed: boolean | null
+          is_verified: boolean | null
+          latitude: number | null
+          longitude: number | null
+          name: string
+          phone: string | null
+          state: string | null
+          updated_at: string
+          website: string | null
+          zip_code: string | null
+        }
+        Insert: {
+          address?: string | null
+          category: string
+          city?: string | null
+          claimed_by?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          image_url?: string | null
+          is_claimed?: boolean | null
+          is_verified?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          phone?: string | null
+          state?: string | null
+          updated_at?: string
+          website?: string | null
+          zip_code?: string | null
+        }
+        Update: {
+          address?: string | null
+          category?: string
+          city?: string | null
+          claimed_by?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          image_url?: string | null
+          is_claimed?: boolean | null
+          is_verified?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          phone?: string | null
+          state?: string | null
+          updated_at?: string
+          website?: string | null
+          zip_code?: string | null
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          business_count: number | null
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          business_count?: number | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          business_count?: number | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       kv_store_6368c877: {
         Row: {
           key: string
@@ -28,6 +166,100 @@ export type Database = {
           value?: Json
         }
         Relationships: []
+      }
+      opinion_timeline: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          message: string | null
+          opinion_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          message?: string | null
+          opinion_id: string
+          status: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          message?: string | null
+          opinion_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opinion_timeline_opinion_id_fkey"
+            columns: ["opinion_id"]
+            isOneToOne: false
+            referencedRelation: "opinions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      opinions: {
+        Row: {
+          business_id: string
+          content: string
+          created_at: string
+          id: string
+          is_anonymous: boolean | null
+          is_public: boolean | null
+          priority: string | null
+          proof_files: string[] | null
+          rating: number | null
+          status: string | null
+          title: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_id: string
+          content: string
+          created_at?: string
+          id?: string
+          is_anonymous?: boolean | null
+          is_public?: boolean | null
+          priority?: string | null
+          proof_files?: string[] | null
+          rating?: number | null
+          status?: string | null
+          title: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_anonymous?: boolean | null
+          is_public?: boolean | null
+          priority?: string | null
+          proof_files?: string[] | null
+          rating?: number | null
+          status?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opinions_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {

@@ -6,60 +6,59 @@ import { BusinessCard } from "@/components/ui/business-card"
 import { Button } from "@/components/ui/button"
 import { Plus, TrendingUp, MapPin } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { useBusinesses } from "@/hooks/useBusinesses"
+import { useOpinions } from "@/hooks/useOpinions"
 
-// Mock data matching the design
-const mockBusinesses = [
-  {
-    id: 1,
-    name: "Reflection Beauty Clinic",
-    category: "Skincare",
-    trustScore: 85,
-    trustLevel: "verified" as const,
-    rating: 4.5,
-    reviewCount: 75,
-    image: "/placeholder.svg"
-  },
-  {
-    id: 2,
-    name: "Mary's Kitchen & Catering",
-    category: "Food & Restaurant",
-    trustScore: 72,
-    trustLevel: "verified" as const,
-    rating: 4.2,
-    reviewCount: 45,
-    image: "/placeholder.svg"
-  },
-  {
-    id: 3,
-    name: "72 Wears",
-    category: "Fashion",
-    trustScore: 91,
-    trustLevel: "verified" as const,
-    rating: 4.8,
-    reviewCount: 120,
-    image: "/placeholder.svg"
-  },
-  {
-    id: 4,
-    name: "The Tiny Needle",
-    category: "Tailoring",
-    trustScore: 67,
-    trustLevel: "pending" as const,
-    rating: 4.0,
-    reviewCount: 28,
-    image: "/placeholder.svg"
-  }
-]
+// Helper function to calculate trust score based on opinions
+const calculateTrustScore = (opinions: any[]) => {
+  if (opinions.length === 0) return 50; // Default score
+  
+  const avgRating = opinions.reduce((sum, op) => sum + (op.rating || 3), 0) / opinions.length;
+  const complaintPenalty = opinions.filter(op => op.type === 'complaint').length * 5;
+  const praiseBonus = opinions.filter(op => op.type === 'praise').length * 5;
+  
+  return Math.max(10, Math.min(100, (avgRating / 5) * 100 + praiseBonus - complaintPenalty));
+};
+
+// Helper function to determine trust level
+const getTrustLevel = (trustScore: number, isVerified: boolean) => {
+  if (!isVerified) return 'pending' as const;
+  if (trustScore >= 80) return 'verified' as const;
+  return 'verified' as const; // Only pending or verified for now
+};
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("")
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { businesses, loading: businessesLoading } = useBusinesses()
+  const { opinions } = useOpinions()
 
-  const filteredBusinesses = mockBusinesses.filter(business =>
+  // Group opinions by business for calculations
+  const opinionsByBusiness = opinions.reduce((acc, opinion) => {
+    if (!acc[opinion.business_id]) acc[opinion.business_id] = [];
+    acc[opinion.business_id].push(opinion);
+    return acc;
+  }, {} as Record<string, any[]>);
+
+  const filteredBusinesses = businesses.filter(business =>
     business.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     business.category.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  ).map(business => {
+    const businessOpinions = opinionsByBusiness[business.id] || [];
+    const trustScore = calculateTrustScore(businessOpinions);
+    const avgRating = businessOpinions.length > 0 
+      ? businessOpinions.reduce((sum, op) => sum + (op.rating || 3), 0) / businessOpinions.length 
+      : undefined;
+    
+    return {
+      ...business,
+      trustScore,
+      trustLevel: getTrustLevel(trustScore, business.is_verified),
+      rating: avgRating,
+      reviewCount: businessOpinions.length,
+    };
+  })
 
   return (
     <div className="min-h-screen bg-background">
@@ -119,33 +118,38 @@ export default function Home() {
           </div>
           
           <div className="grid gap-4">
-            {filteredBusinesses.map((business) => (
-              <BusinessCard
-                key={business.id}
-                name={business.name}
-                category={business.category}
-                trustScore={business.trustScore}
-                trustLevel={business.trustLevel}
-                rating={business.rating}
-                reviewCount={business.reviewCount}
-                image={business.image}
-                onClick={() => navigate(`/business/${business.id}`)}
-              />
-            ))}
+            {businessesLoading ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Loading businesses...</p>
+              </div>
+            ) : filteredBusinesses.length > 0 ? (
+              filteredBusinesses.map((business) => (
+                <BusinessCard
+                  key={business.id}
+                  name={business.name}
+                  category={business.category}
+                  trustScore={business.trustScore}
+                  trustLevel={business.trustLevel}
+                  rating={business.rating}
+                  reviewCount={business.reviewCount}
+                  image={business.image_url || "/placeholder.svg"}
+                  isVerified={business.is_verified}
+                  onClick={() => navigate(`/business/${business.id}`)}
+                />
+              ))
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">No businesses found</p>
+                <Button 
+                  className="mt-4" 
+                  variant="outline"
+                  onClick={() => navigate("/submit-opinion")}
+                >
+                  Be the first to report this business
+                </Button>
+              </div>
+            )}
           </div>
-
-          {filteredBusinesses.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No businesses found</p>
-              <Button 
-                className="mt-4" 
-                variant="outline"
-                onClick={() => navigate("/submit-opinion")}
-              >
-                Be the first to report this business
-              </Button>
-            </div>
-          )}
         </div>
       </div>
     </div>
