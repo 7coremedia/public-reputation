@@ -146,159 +146,159 @@ export default function BusinessDiscovery() {
                 Map
               </TabsTrigger>
             </TabsList>
-          </Tabs>
-        </div>
 
-        <TabsContent value="list" className="mt-0">
-          <div className="space-y-6">
-            {/* Categories Grid */}
-            <div className="px-4 mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="expressive-subheading">Categories</h2>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-primary"
-                  onClick={() => setSelectedCategory("all")}
-                >
-                  View All
-                </Button>
-              </div>
-              
-              {categoriesLoading ? (
-                <div className="text-center py-4">
-                  <p className="text-muted-foreground">Loading categories...</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-3">
-                  {categories.map((category) => {
-                    const IconComponent = categoryIcons[category.icon || 'Store'] || Store
-                    return (
-                      <Card 
-                        key={category.id}
-                        className={cn(
-                          "p-4 cursor-pointer transition-all hover:elevated-shadow",
-                          selectedCategory === category.name && "ring-2 ring-primary"
-                        )}
-                        onClick={() => setSelectedCategory(category.name)}
-                      >
-                        <CardContent className="p-0 flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                            <IconComponent className="w-5 h-5 text-primary" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-medium text-sm text-card-foreground">{category.name}</h3>
-                            <p className="text-xs text-muted-foreground">{category.business_count} businesses</p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
-
-            {/* Trending Cases */}
-            {trendingCases.length > 0 && (
-              <div className="px-4 mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="expressive-subheading flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5" />
-                    Trending Cases
-                  </h2>
-                  <Button variant="ghost" size="sm" className="text-primary">
-                    View All
-                  </Button>
-                </div>
-                
-                <div className="space-y-3">
-                  {trendingCases.map((case_) => (
-                    <Card key={case_.id} className="cursor-pointer hover:elevated-shadow transition-all">
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h4 className="font-semibold text-sm">{case_.name}</h4>
-                              <Badge variant="destructive" className="text-xs">
-                                Active
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground mb-2">{case_.issue}</p>
-                            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                              <span>{case_.category}</span>
-                              <span className="flex items-center gap-1">
-                                <Users className="w-3 h-3" />
-                                {case_.participants}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
-                                {case_.timeAgo}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Business Results */}
-            <div className="flex-1 px-4 space-y-4 pb-20">
-              <div className="flex items-center justify-between">
-                <h2 className="expressive-subheading">
-                  {selectedCategory === "all" ? "All Businesses" : selectedCategory}
-                  <span className="text-sm font-normal text-muted-foreground ml-2">
-                    ({filteredBusinesses.length})
-                  </span>
-                </h2>
-              </div>
-              
-              <div className="grid gap-4">
-                {businessesLoading ? (
-                  <div className="text-center py-12">
-                    <p className="text-muted-foreground">Loading businesses...</p>
-                  </div>
-                ) : filteredBusinesses.length > 0 ? (
-                  filteredBusinesses.map((business) => (
-                    <BusinessCard
-                      key={business.id}
-                      name={business.name}
-                      category={business.category}
-                      trustScore={business.trustScore}
-                      trustLevel={business.trustLevel}
-                      rating={business.rating}
-                      reviewCount={business.reviewCount}
-                      image={business.image_url || "/placeholder.svg"}
-                      isVerified={business.is_verified}
-                      onClick={() => navigate(`/business/${business.id}`)}
-                    />
-                  ))
-                ) : (
-                  <div className="text-center py-12">
-                    <p className="text-muted-foreground">No businesses found</p>
+            <TabsContent value="list" className="mt-0">
+              <div className="space-y-6">
+                {/* Categories Grid */}
+                <div className="px-4 mb-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="expressive-subheading">Categories</h2>
                     <Button 
-                      className="mt-4" 
-                      variant="outline"
-                      onClick={() => navigate("/submit-opinion")}
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-primary"
+                      onClick={() => setSelectedCategory("all")}
                     >
-                      Be the first to report a business
+                      View All
                     </Button>
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </TabsContent>
+                  
+                  {categoriesLoading ? (
+                    <div className="text-center py-4">
+                      <p className="text-muted-foreground">Loading categories...</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-3">
+                      {categories.map((category) => {
+                        const IconComponent = categoryIcons[category.icon || 'Store'] || Store
+                        return (
+                          <Card 
+                            key={category.id}
+                            className={cn(
+                              "p-4 cursor-pointer transition-all hover:elevated-shadow",
+                              selectedCategory === category.name && "ring-2 ring-primary"
+                            )}
+                            onClick={() => setSelectedCategory(category.name)}
+                          >
+                            <CardContent className="p-0 flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <IconComponent className="w-5 h-5 text-primary" />
+                              </div>
+                              <div className="flex-1">
+                                <h3 className="font-medium text-sm text-card-foreground">{category.name}</h3>
+                                <p className="text-xs text-muted-foreground">{category.business_count} businesses</p>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
 
-        <TabsContent value="map" className="mt-0">
-          <div className="px-4 pb-20">
-            <div className="bg-muted rounded-2xl h-96 flex items-center justify-center">
-              <p className="text-muted-foreground">Map view coming soon</p>
-            </div>
-          </div>
-        </TabsContent>
+                {/* Trending Cases */}
+                {trendingCases.length > 0 && (
+                  <div className="px-4 mb-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="expressive-subheading flex items-center gap-2">
+                        <TrendingUp className="w-5 h-5" />
+                        Trending Cases
+                      </h2>
+                      <Button variant="ghost" size="sm" className="text-primary">
+                        View All
+                      </Button>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      {trendingCases.map((case_) => (
+                        <Card key={case_.id} className="cursor-pointer hover:elevated-shadow transition-all">
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <h4 className="font-semibold text-sm">{case_.name}</h4>
+                                  <Badge variant="destructive" className="text-xs">
+                                    Active
+                                  </Badge>
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-2">{case_.issue}</p>
+                                <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                  <span>{case_.category}</span>
+                                  <span className="flex items-center gap-1">
+                                    <Users className="w-3 h-3" />
+                                    {case_.participants}
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <Clock className="w-3 h-3" />
+                                    {case_.timeAgo}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Business Results */}
+                <div className="flex-1 px-4 space-y-4 pb-20">
+                  <div className="flex items-center justify-between">
+                    <h2 className="expressive-subheading">
+                      {selectedCategory === "all" ? "All Businesses" : selectedCategory}
+                      <span className="text-sm font-normal text-muted-foreground ml-2">
+                        ({filteredBusinesses.length})
+                      </span>
+                    </h2>
+                  </div>
+                  
+                  <div className="grid gap-4">
+                    {businessesLoading ? (
+                      <div className="text-center py-12">
+                        <p className="text-muted-foreground">Loading businesses...</p>
+                      </div>
+                    ) : filteredBusinesses.length > 0 ? (
+                      filteredBusinesses.map((business) => (
+                        <BusinessCard
+                          key={business.id}
+                          name={business.name}
+                          category={business.category}
+                          trustScore={business.trustScore}
+                          trustLevel={business.trustLevel}
+                          rating={business.rating}
+                          reviewCount={business.reviewCount}
+                          image={business.image_url || "/placeholder.svg"}
+                          isVerified={business.is_verified}
+                          onClick={() => navigate(`/business/${business.id}`)}
+                        />
+                      ))
+                    ) : (
+                      <div className="text-center py-12">
+                        <p className="text-muted-foreground">No businesses found</p>
+                        <Button 
+                          className="mt-4" 
+                          variant="outline"
+                          onClick={() => navigate("/submit-opinion")}
+                        >
+                          Be the first to report a business
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="map" className="mt-0">
+              <div className="px-4 pb-20">
+                <div className="bg-muted rounded-2xl h-96 flex items-center justify-center">
+                  <p className="text-muted-foreground">Map view coming soon</p>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </div>
   )
