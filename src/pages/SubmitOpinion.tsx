@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 import { MobileHeader } from "@/components/ui/mobile-header";
 import { SearchBar } from "@/components/search-bar";
 import { Upload, Camera, Image, MessageSquare, ThumbsUp, AlertTriangle, Lightbulb, X, Check } from "lucide-react";
@@ -73,6 +74,7 @@ const ratingEmojis = [{
 export default function SubmitOpinion() {
   const [step, setStep] = useState<"business" | "type" | "details" | "proof" | "rating" | "final">("business");
   const [selectedBusiness, setSelectedBusiness] = useState<any>(null);
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [opinionType, setOpinionType] = useState<string>("");
   const [story, setStory] = useState("");
@@ -351,14 +353,7 @@ export default function SubmitOpinion() {
   };
   return <div className="min-h-screen bg-background">
       <div className="centered-container">
-        <MobileHeader title="Submit Opinion" showBack={true} onBack={() => {
-        const steps = ["business", "type", "details", "proof", "rating", "final"];
-        const currentIndex = steps.indexOf(step);
-        if (currentIndex > 0) {
-          setStep(steps[currentIndex - 1] as any);
-        }
-      }} />
-
+        <MobileHeader title="Submit Opinion" showBack={true} onBackClick={() => navigate(-1)} />
         <div className="flex-1 px-4 py-6 space-y-6">
           {/* Progress indicator - centered */}
           <div className="progress-container">
