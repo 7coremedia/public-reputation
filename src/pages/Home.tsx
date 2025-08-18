@@ -1,13 +1,12 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { MobileHeader } from "@/components/ui/mobile-header"
-import { useAuth } from "@/hooks/useAuth"
 import { SearchBar } from "@/components/search-bar"
 import { BusinessCard } from "@/components/ui/business-card"
 import { Button } from "@/components/ui/button"
 import { Plus, TrendingUp, MapPin } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useBusinesses } from "@/hooks/useBusinesses"
-import { useOpinions } from "@/hooks/useOpinions"
+import useOpinions from "@/hooks/useOpinions"
 
 // Helper function to calculate trust score based on opinions
 const calculateTrustScore = (opinions: any[]) => {
@@ -30,46 +29,54 @@ const getTrustLevel = (trustScore: number, isVerified: boolean) => {
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("")
   const navigate = useNavigate()
-  const { user } = useAuth()
   const { businesses, loading: businessesLoading } = useBusinesses()
   const { opinions } = useOpinions()
 
   // Group opinions by business for calculations
-  const opinionsByBusiness = opinions.reduce((acc, opinion) => {
-    if (!acc[opinion.business_id]) acc[opinion.business_id] = [];
-    acc[opinion.business_id].push(opinion);
-    return acc;
-  }, {} as Record<string, any[]>);
+  const opinionsByBusiness = useMemo(() => {
+    return opinions.reduce((acc, opinion) => {
+      if (!acc[opinion.business_id]) acc[opinion.business_id] = [];
+      acc[opinion.business_id].push(opinion);
+      return acc;
+    }, {} as Record<string, any[]>);
+  }, [opinions]);
 
-  const filteredBusinesses = businesses.filter(business =>
-    business.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    business.category.toLowerCase().includes(searchQuery.toLowerCase())
-  ).map(business => {
-    const businessOpinions = opinionsByBusiness[business.id] || [];
-    const trustScore = calculateTrustScore(businessOpinions);
-    const avgRating = businessOpinions.length > 0 
-      ? businessOpinions.reduce((sum, op) => sum + (op.rating || 3), 0) / businessOpinions.length 
-      : undefined;
-    
-    return {
-      ...business,
-      trustScore,
-      trustLevel: getTrustLevel(trustScore, business.is_verified),
-      rating: avgRating,
-      reviewCount: businessOpinions.length,
-    };
-  })
+  const processedBusinesses = useMemo(() => {
+    return businesses.map(business => {
+      const businessOpinions = opinionsByBusiness[business.id] || [];
+      const trustScore = calculateTrustScore(businessOpinions);
+      const avgRating = businessOpinions.length > 0
+        ? businessOpinions.reduce((sum, op) => sum + (op.rating || 3), 0) / businessOpinions.length
+        : undefined;
+
+      return {
+        ...business,
+        trustScore,
+        trustLevel: getTrustLevel(trustScore, business.is_verified),
+        rating: avgRating,
+        reviewCount: businessOpinions.length,
+      };
+    });
+  }, [businesses, opinionsByBusiness]);
+
+  const filteredBusinesses = useMemo(() => {
+    if (!searchQuery) {
+      return processedBusinesses.slice(0, 5); // Show top 5 recent businesses when no search
+    }
+    return processedBusinesses.filter(business =>
+      business.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      business.category.toLowerCase().includes(searchQuery.toLowerCase())
+    ).slice(0, 5);
+  }, [searchQuery, processedBusinesses]);
 
   return (
     <div className="min-h-screen bg-background">
       <div className="centered-container">
         {/* Header */}
-        <MobileHeader 
-          useTypingAnimation={true}
-        />
+        <MobileHeader useTypingAnimation={true} />
 
         {/* Search */}
-        <SearchBar 
+        <SearchBar
           placeholder="Enter business name or search to report..."
           onSearch={setSearchQuery}
         />
@@ -77,23 +84,23 @@ export default function Home() {
         {/* Quick Actions */}
         <div className="px-4 mb-6">
           <div className="grid grid-cols-3 gap-3">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="h-12 rounded-2xl flex items-center gap-2 text-sm"
               onClick={() => navigate("/discover")}
             >
               <TrendingUp className="w-4 h-4" />
               Trending
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="h-12 rounded-2xl flex items-center gap-2 text-sm"
               onClick={() => navigate("/discover")}
             >
               <MapPin className="w-4 h-4" />
               Near Me
             </Button>
-            <Button 
+            <Button
               className="h-12 rounded-2xl flex items-center gap-2 text-sm bg-primary hover:bg-primary/90"
               onClick={() => navigate("/submit-opinion")}
             >
@@ -106,17 +113,21 @@ export default function Home() {
         {/* Business Grid */}
         <div className="flex-1 px-4 space-y-4 pb-20">
           <div className="flex items-center justify-between">
-            <h2 className="expressive-subheading">Recent Businesses</h2>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-primary"
-              onClick={() => navigate("/discover")}
-            >
-              View All
-            </Button>
+            <h2 className="expressive-subheading">
+              {searchQuery ? "Search Results" : "Recent Businesses"}
+            </h2>
+            {!searchQuery && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-primary"
+                onClick={() => navigate("/discover")}
+              >
+                View All
+              </Button>
+            )}
           </div>
-          
+
           <div className="grid gap-4">
             {businessesLoading ? (
               <div className="text-center py-12">
@@ -134,16 +145,19 @@ export default function Home() {
                   reviewCount={business.reviewCount}
                   image={business.image_url || "/placeholder.svg"}
                   isVerified={business.is_verified}
-                  onClick={() => navigate(`/business/${business.id}`)}
+                  onClick={() => navigate(`/submit-opinion`, { state: { initialStep: "addOpinion", initialBusinessId: business.id, initialBusinessName: business.name } })}
+                  onImageClick={() => navigate(`/business/${business.id}`)}
                 />
               ))
             ) : (
               <div className="text-center py-12">
-                <p className="text-muted-foreground">No businesses found</p>
-                <Button 
-                  className="mt-4" 
+                <p className="text-muted-foreground mb-4">
+                  No businesses found for "{searchQuery}"?
+                </p>
+                <Button
+                  className="mt-4"
                   variant="outline"
-                  onClick={() => navigate("/submit-opinion")}
+                  onClick={() => navigate("/submit-opinion", { state: { initialStep: "addBusiness", initialBusinessName: searchQuery } })}
                 >
                   Be the first to report this business
                 </Button>

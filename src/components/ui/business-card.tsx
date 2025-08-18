@@ -13,6 +13,7 @@ interface BusinessCardProps {
   image?: string
   isVerified?: boolean
   onClick?: () => void
+  onImageClick?: () => void;
   className?: string
 }
 
@@ -26,6 +27,7 @@ export function BusinessCard({
   image,
   isVerified = false,
   onClick,
+  onImageClick,
   className
 }: BusinessCardProps) {
   return (
@@ -43,10 +45,19 @@ export function BusinessCard({
             <img 
               src={image} 
               alt={name}
-              className="w-12 h-12 rounded-xl object-cover"
+              className="w-12 h-12 rounded-xl object-cover cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent card's onClick from firing
+                if (onImageClick) onImageClick();
+              }}
             />
           ) : (
-            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onImageClick) onImageClick();
+              }}
+            >
               <span className="text-lg font-bold text-muted-foreground">
                 {name.charAt(0)}
               </span>

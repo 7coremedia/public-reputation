@@ -1,121 +1,41 @@
-import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "./useAuth";
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
-export interface Opinion {
-  id: string;
-  user_id: string;
-  business_id: string;
-  type: 'complaint' | 'praise' | 'suggestion';
-  title: string;
-  content: string;
-  rating?: number;
-  status: 'pending' | 'under_review' | 'resolved' | 'dismissed';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  is_anonymous: boolean;
-  is_public: boolean;
-  proof_files?: string[];
-  created_at: string;
-  updated_at: string;
-  business?: {
-    name: string;
-    category: string;
-  };
-  profile?: {
-    full_name?: string;
-    avatar_url?: string;
-  };
+interface Opinion {
+    id: string;
+    business_id: string;
+    content: string;
+    created_at: string | null;
+    is_anonymous: boolean | null;
+    is_public: boolean | null;
+    priority: string | null;
+    proof_files: string[] | null;
+    rating: number | null;
+    status: string | null;
+    title: string | null;
+    type: string | null;
+    user_id: string | null;
 }
 
-export const useOpinions = (businessId?: string) => {
-  const [opinions, setOpinions] = useState<Opinion[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
+const useOpinions = () => {    const [opinions, setOpinions] = useState<Opinion[]>([]);
+    useEffect(() => {
+        const fetchOpinions = async () => {
+            const { data, error } = await supabase
+                .from('opinions')
+                .select('*'); // Fetch all opinions for now
 
-  const fetchOpinions = async () => {
-    try {
-      setLoading(true);
-      let query = supabase
-        .from('opinions')
-        .select(`
-          *,
-          business:businesses(name, category),
-          profile:profiles(full_name, avatar_url)
-        `);
+            if (error) {
+                console.error('Error fetching opinions:', error);
+            } else {                // Cast to Opinion[] assumes data structure matches Opinion interface
+                setOpinions(data as Opinion[]);
+            }
+        };
+        fetchOpinions();
+    }, []); // Empty dependency array to fetch only once on mount
 
-      if (businessId) {
-        query = query.eq('business_id', businessId);
-      }
-
-      const { data, error } = await query
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setOpinions((data || []) as Opinion[]);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const createOpinion = async (opinionData: {
-    business_id: string;
-    type: 'complaint' | 'praise' | 'suggestion';
-    title: string;
-    content: string;
-    rating?: number;
-    is_anonymous?: boolean;
-    is_public?: boolean;
-    proof_files?: string[];
-  }) => {
-    if (!user) throw new Error('User must be authenticated');
-
-    try {
-      const { data, error } = await supabase
-        .from('opinions')
-        .insert([{
-          ...opinionData,
-          user_id: user.id,
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
-      await fetchOpinions(); // Refresh the list
-      return data;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      throw err;
-    }
-  };
-
-  const updateOpinionStatus = async (opinionId: string, status: Opinion['status']) => {
-    try {
-      const { error } = await supabase
-        .from('opinions')
-        .update({ status })
-        .eq('id', opinionId);
-
-      if (error) throw error;
-      await fetchOpinions(); // Refresh the list
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      throw err;
-    }
-  };
-
-  useEffect(() => {
-    fetchOpinions();
-  }, [businessId, user]);
-
-  return {
-    opinions,
-    loading,
-    error,
-    fetchOpinions,
-    createOpinion,
-    updateOpinionStatus,
-  };
+    return {
+        opinions,
+    };
 };
+
+export default useOpinions;
