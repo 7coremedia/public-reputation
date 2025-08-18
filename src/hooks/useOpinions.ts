@@ -1,40 +1,56 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { useState, useCallback, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Opinion {
     id: string;
-    business_id: string;
-    content: string;
-    created_at: string | null;
-    is_anonymous: boolean | null;
-    is_public: boolean | null;
-    priority: string | null;
-    proof_files: string[] | null;
-    rating: number | null;
-    status: string | null;
-    title: string | null;
-    type: string | null;
-    user_id: string | null;
+    businessName: string; // Added to link opinions to businesses
+    type: 'Complaint' | 'Praise' | 'Suggestion';
+    proofUrls: string[]; // Assuming proof is stored as URLs
+    story: string;
+    rating: '😡 Horrible' | '😞 Disappointing' | '😐 Mid' | '🙂 Okay' | '😃 Good' | '🤩 Excellent';
+    allowContact: boolean;
+    anonymous: boolean;
+    created_at: string;
 }
 
-const useOpinions = () => {    const [opinions, setOpinions] = useState<Opinion[]>([]);
-    useEffect(() => {
-        const fetchOpinions = async () => {
-            const { data, error } = await supabase
-                .from('opinions')
-                .select('*'); // Fetch all opinions for now
+const STORAGE_KEY = 'localOpinions';
 
-            if (error) {
-                console.error('Error fetching opinions:', error);
-            } else {                // Cast to Opinion[] assumes data structure matches Opinion interface
-                setOpinions(data as Opinion[]);
-            }
+const useOpinions = () => {
+    // Initialize opinions from localStorage or with an empty array
+    const [opinions, setOpinions] = useState<Opinion[]>(() => {
+        try {
+            const savedOpinions = localStorage.getItem(STORAGE_KEY);
+            return savedOpinions ? JSON.parse(savedOpinions) : [];
+        } catch (error) {
+            console.error("Error loading opinions from localStorage:", error);
+            return []; // Return empty array in case of error
+        }
+    });
+
+    // Save opinions to localStorage whenever they change
+    useEffect(() => {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(opinions));
+        } catch (error) {
+            console.error("Error saving opinions to localStorage:", error);
+        }
+    }, [opinions]); // Corrected dependency array
+
+    const createOpinion = useCallback((opinionData: Omit<Opinion, 'id' | 'created_at' | 'businessName'>, businessName: string) => {
+        const newOpinion: Opinion = {
+            ...opinionData,
+            id: uuidv4(),
+            businessName, // Assign the business name
+            created_at: new Date().toISOString(),
         };
-        fetchOpinions();
-    }, []); // Empty dependency array to fetch only once on mount
+        setOpinions(prevOpinions => [...prevOpinions, newOpinion]);
+        return newOpinion;
+    }, []);
 
     return {
         opinions,
+        createOpinion,
+        // Add other functions here as needed
     };
 };
 

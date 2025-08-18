@@ -19,6 +19,7 @@ import {
 import { useNavigate } from "react-router-dom"
 import { supabase } from "@/integrations/supabase/client"
 import { useOpinions } from "@/hooks/useOpinions"
+import useOpinions from "@/hooks/useOpinions"
 
 interface Business {
   id: string;

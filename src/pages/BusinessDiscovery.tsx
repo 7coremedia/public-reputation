@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 import { useNavigate } from "react-router-dom"
 import { useBusinesses } from "@/hooks/useBusinesses"
 import { useCategories } from "@/hooks/useCategories"
-import { useOpinions } from "@/hooks/useOpinions"
+import useOpinions from "@/hooks/useOpinions" // Ensure default import
 
 // Helper functions
 const calculateTrustScore = (opinions: any[]) => {

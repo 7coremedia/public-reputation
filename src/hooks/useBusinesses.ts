@@ -190,14 +190,27 @@ export const useBusinesses = () => {
     }
   };
 
+  const searchBusinesses = useCallback((query: string, category?: string) => {
+    const lowerCaseQuery = query.toLowerCase();
+    const filtered = (businesses).filter(business => {
+      const matchesQuery =
+        business.name.toLowerCase().includes(lowerCaseQuery) ||
+        business.category.toLowerCase().includes(lowerCaseQuery) ||
+        business.description?.toLowerCase().includes(lowerCaseQuery);
+
+      const matchesCategory = !category || category === "all" || business.category === category;
+      return matchesQuery && matchesCategory;
+    });
+    setBusinesses(filtered); // Update the state with filtered businesses
+  }, [businesses]); // Add businesses as a dependency
+
   useEffect(() => {
     fetchBusinesses();
   }, [fetchBusinesses]);
 
   return {
     businesses,
-    loading,
-    error,
-    createBusiness,
+    loading,    error,
+    createBusiness,    searchBusinesses,
   };
 };
