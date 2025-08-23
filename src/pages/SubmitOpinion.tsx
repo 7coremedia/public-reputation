@@ -7,12 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Star } from "lucide-react"; // Assuming Star icon is used for rating
 import useOpinions from "@/hooks/useOpinions";
+import { useBusinesses } from "@/hooks/useBusinesses";
 
 const opinionTypes = [
   { id: "complaint", label: "Complaint", description: "Report an issue" },
@@ -31,11 +29,13 @@ const ratingEmojis = [
 export default function SubmitOpinion() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [selectedType, setSelectedType] = useState(null);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [selectedRating, setSelectedRating] = useState(null);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [businessName, setBusinessName] = useState("");
+  const { opinions, createOpinion } = useOpinions();
+  const { businesses, createBusiness } = useBusinesses();
 
   const handleSubmit = async () => {
     if (!user) {
@@ -50,38 +50,44 @@ export default function SubmitOpinion() {
     }
 
     try {
-      // First, try to find the business
-      let { data: business, error: businessError } = await supabase
-        .from("businesses")
-        .select("id")
-        .eq("name", businessName)
-        .single();
-
-      if (businessError && businessError.code === "PGRST116") { // No row found
-        // If business not found, create it
-        const { data: newBusiness, error: createBusinessError } = await supabase
-          .from("businesses")
-          .insert({ name: businessName, category: "Uncategorized" }) // Added placeholder category
-          .select()
-          .single();
-
-        if (createBusinessError) throw createBusinessError;
-        business = newBusiness;
-      } else if (businessError) {
-        throw businessError;
+      // Find existing business by name (case-insensitive)
+      let target = businesses.find(
+        (b) => b.name.trim().toLowerCase() === businessName.trim().toLowerCase()
+      );
+      if (!target) {
+        // Create a minimal business locally
+        target = await createBusiness({
+          name: businessName.trim(),
+          category: "Uncategorized",
+          description: undefined,
+          image_url: "/placeholder.svg",
+          website: undefined,
+          phone: undefined,
+          email: undefined,
+          address: undefined,
+          city: undefined,
+          state: undefined,
+          zip_code: undefined,
+          latitude: undefined,
+          longitude: undefined,
+          is_verified: false,
+          is_claimed: false,
+          claimed_by: undefined,
+        });
       }
 
-      const { error: opinionError } = await supabase.from("opinions").insert({
+      // Create the opinion locally
+      createOpinion({
         user_id: user.id,
-        business_id: business.id,
-        type: selectedType,
+        business_id: target.id,
+        type: selectedType as 'complaint' | 'praise' | 'suggestion',
         title,
         content,
         rating: selectedRating,
-        status: "pending", // Default status
+        status: "pending",
+        is_anonymous: false,
+        profile: { full_name: user.full_name || undefined },
       });
-
-      if (opinionError) throw opinionError;
 
       toast.success("Opinion submitted successfully!");
       navigate("/business-discovery"); // Redirect to business discovery or relevant page
