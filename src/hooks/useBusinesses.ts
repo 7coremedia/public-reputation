@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { supabase } from "@/integrations/supabase/client";
 
 export interface Business {
   id: string;
@@ -138,55 +138,54 @@ const mockBusinesses: Business[] = [
   },
 ];
 
+
 export const useBusinesses = () => {
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const STORAGE_KEY = 'localBusinesses';
-
   const fetchBusinesses = useCallback(async () => {
     try {
       setLoading(true);
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed: Business[] = JSON.parse(saved);
-        setBusinesses(parsed);
-      } else {
-        // Seed storage with mock data on first run
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(mockBusinesses));
+      // First, try to fetch from Supabase
+      const { data, error } = await supabase
+        .from('businesses')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error || !data || data.length === 0) {
+        // If Supabase fails or returns no data, use the mock data
+        console.log("Supabase fetch failed or returned no data, falling back to mock businesses.");
         setBusinesses(mockBusinesses);
+      } else {
+        // Otherwise, use the data from Supabase
+        setBusinesses(data);
       }
-      setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load businesses');
-      setBusinesses(mockBusinesses);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error("Error fetching businesses, falling back to mock data.", err);
+      setBusinesses(mockBusinesses); // Fallback to mock data on any exception
     } finally {
-      setTimeout(() => setLoading(false), 200);
+      // Simulate a short delay to prevent jarring UI flashes on fast networks
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
     }
   }, []);
 
-  const persist = (items: Business[]) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    setBusinesses(items);
-  };
-
-  const createBusiness = async (
-    businessData: Omit<Business, 'id' | 'created_at' | 'updated_at'>
-  ) => {
+  const createBusiness = async (businessData: Omit<Business, 'id' | 'created_at' | 'updated_at'>) => {
     try {
-      const now = new Date().toISOString();
-      const newBiz: Business = {
-        ...businessData,
-        id: uuidv4(),
-        created_at: now,
-        updated_at: now,
-      };
-      const next = [newBiz, ...businesses];
-      persist(next);
-      return newBiz;
+      const { data, error } = await supabase
+        .from('businesses')
+        .insert([businessData])
+        .select()
+        .single();
+
+      if (error) throw error;
+      await fetchBusinesses(); // Refresh the list
+      return data;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create business');
+      setError(err instanceof Error ? err.message : 'An error occurred');
       throw err;
     }
   };
@@ -211,9 +210,7 @@ export const useBusinesses = () => {
 
   return {
     businesses,
-    loading,
-    error,
-    createBusiness,
-    searchBusinesses,
+    loading,    error,
+    createBusiness,    searchBusinesses,
   };
 };
